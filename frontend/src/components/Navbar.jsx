@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, LogOut, User, Sparkles, Music2 } from 'lucide-react';
+import { Activity, LogOut, User, Sparkles, Music2, Search } from 'lucide-react';
+
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -26,8 +27,8 @@ export const Navbar = () => {
             <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-purple-300">
               Tune<span className="text-cyan-400">Sense</span>
             </span>
-            <span className="text-[10px] tracking-wider uppercase font-semibold text-purple-400 -mt-1">
-              AI Music Engine
+            <span className="text-[10px] tracking-wider font-semibold text-purple-400 -mt-0.5 hidden sm:inline">
+              Discover music that understands your taste.
             </span>
           </div>
         </Link>
@@ -37,12 +38,21 @@ export const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Link
+                to="/search"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5 transition-all"
+              >
+                <Search className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="hidden sm:inline">Search</span>
+              </Link>
+
+              <Link
                 to="/discover"
                 className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20 hover:bg-purple-500/20 transition-all"
               >
                 <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                Recommendations
+                AI Radar
               </Link>
+
               
               <Link
                 to="/profile"

@@ -125,6 +125,15 @@ class MockAsyncCollection:
             if self._match(d, query):
                 if "$set" in update:
                     d.update(update["$set"])
+                if "$push" in update:
+                    for field, val in update["$push"].items():
+                        if field not in d or not isinstance(d[field], list):
+                            d[field] = []
+                        d[field].append(val)
+                if "$pull" in update:
+                    for field, val in update["$pull"].items():
+                        if field in d and isinstance(d[field], list):
+                            d[field] = [x for x in d[field] if x != val]
                 if "$setOnInsert" in update and upsert:
                     pass
                 return UpdateResult(1, 1)
@@ -133,6 +142,9 @@ class MockAsyncCollection:
             new_doc = dict(query)
             if "$set" in update:
                 new_doc.update(update["$set"])
+            if "$push" in update:
+                for field, val in update["$push"].items():
+                    new_doc[field] = [val]
             if "$setOnInsert" in update:
                 new_doc.update(update["$setOnInsert"])
             if "_id" not in new_doc:
@@ -151,6 +163,15 @@ class MockAsyncCollection:
                 self._store.pop(i)
                 return DeleteResult(1)
         return DeleteResult(0)
+
+    async def delete_many(self, query: Dict[str, Any]):
+        class DeleteResult:
+            def __init__(self, deleted_count):
+                self.deleted_count = deleted_count
+
+        initial_len = len(self._store)
+        self._store = [d for d in self._store if not self._match(d, query)]
+        return DeleteResult(initial_len - len(self._store))
 
     async def count_documents(self, query: Dict[str, Any] = None) -> int:
         query = query or {}

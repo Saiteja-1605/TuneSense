@@ -129,3 +129,139 @@ def test_recommendations_and_feedback_and_analytics(client):
     assert "genre_distribution" in analytics_data
     assert "feedback_stats" in analytics_data
     assert analytics_data["feedback_stats"]["likes"] >= 1
+
+def test_artists_and_albums(client):
+    # Test Artists
+    res_artists = client.get("/api/artists")
+    assert res_artists.status_code == 200
+    artists_data = res_artists.json()
+    assert len(artists_data) > 0
+    first_artist = artists_data[0]
+    artist_id = first_artist["artist_id"]
+
+    res_artist_detail = client.get(f"/api/artists/{artist_id}")
+    assert res_artist_detail.status_code == 200
+    detail = res_artist_detail.json()
+    assert detail["artist"]["artist_id"] == artist_id
+    assert len(detail["top_songs"]) > 0
+
+    # Test Albums
+    res_albums = client.get("/api/albums")
+    assert res_albums.status_code == 200
+    albums_data = res_albums.json()
+    assert len(albums_data) > 0
+    first_album = albums_data[0]
+    album_id = first_album["album_id"]
+
+    res_album_detail = client.get(f"/api/albums/{album_id}")
+    assert res_album_detail.status_code == 200
+    alb_detail = res_album_detail.json()
+    assert alb_detail["album"]["album_id"] == album_id
+    assert len(alb_detail["tracks"]) > 0
+
+def test_search_and_likes(client):
+    # Register a user
+    reg_res = client.post("/api/auth/register", json={
+        "name": "Search Fan",
+        "email": "searcher@tunesense.io",
+        "password": "Password123!"
+    })
+    token = reg_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Universal search
+    search_res = client.get("/api/songs/search?q=Midnight")
+    assert search_res.status_code == 200
+    s_data = search_res.json()
+    assert s_data["total_matches"] > 0
+    assert len(s_data["songs"]) > 0
+    target_song_id = s_data["songs"][0]["song_id"]
+
+    # Like song
+    like_res = client.post(f"/api/songs/{target_song_id}/like", headers=headers)
+    assert like_res.status_code == 200
+    assert like_res.json()["is_liked"] is True
+
+    # Check is liked
+    check_res = client.get(f"/api/songs/{target_song_id}/liked", headers=headers)
+    assert check_res.status_code == 200
+    assert check_res.json()["is_liked"] is True
+
+    # Unlike song
+    unlike_res = client.delete(f"/api/songs/{target_song_id}/like", headers=headers)
+    assert unlike_res.status_code == 200
+    assert unlike_res.json()["is_liked"] is False
+
+def test_playlists_and_library_and_home(client):
+    # Register user
+    reg_res = client.post("/api/auth/register", json={
+        "name": "DJ Playlist",
+        "email": "dj@tunesense.io",
+        "password": "Password123!"
+    })
+    token = reg_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # 1. Create Playlist
+    create_res = client.post("/api/playlists", json={
+        "title": "Late Night Vibes",
+        "description": "Chill beats for nocturnal coding",
+        "is_public": True
+    }, headers=headers)
+    assert create_res.status_code == 201
+    playlist = create_res.json()
+    playlist_id = playlist["id"]
+    assert playlist["title"] == "Late Night Vibes"
+
+    # 2. Add song to playlist
+    songs_res = client.get("/api/songs?limit=3")
+    sample_songs = songs_res.json()["items"]
+    song_to_add = sample_songs[0]["song_id"]
+
+    add_res = client.post(f"/api/playlists/{playlist_id}/songs", json={"song_id": song_to_add}, headers=headers)
+    assert add_res.status_code == 200
+    assert song_to_add in add_res.json()["songs"]
+
+    # 3. Get playlist detail
+    get_pl_res = client.get(f"/api/playlists/{playlist_id}")
+    assert get_pl_res.status_code == 200
+    assert len(get_pl_res.json()["tracks"]) >= 1
+
+    # 4. Remove song from playlist
+    del_song_res = client.delete(f"/api/playlists/{playlist_id}/songs/{song_to_add}", headers=headers)
+    assert del_song_res.status_code == 200
+    assert song_to_add not in del_song_res.json()["songs"]
+
+    # 5. Record playback history
+    play_res = client.post("/api/history", json={
+        "song_id": song_to_add,
+        "duration_listened": 45,
+        "completed": True
+    }, headers=headers)
+    assert play_res.status_code == 200
+
+    # 6. Check recently played
+    recent_res = client.get("/api/history/recently-played", headers=headers)
+    assert recent_res.status_code == 200
+    recent_songs = recent_res.json()
+    assert any(s["song_id"] == song_to_add for s in recent_songs)
+
+    # 7. Check Library summary
+    lib_res = client.get("/api/library", headers=headers)
+    assert lib_res.status_code == 200
+    lib_data = lib_res.json()
+    assert lib_data["playlists_count"] >= 1
+
+    # 8. Check Home Feed
+    home_res = client.get("/api/home", headers=headers)
+    assert home_res.status_code == 200
+    home_data = home_res.json()
+    assert "greeting" in home_data
+    assert len(home_data["trending"]) > 0
+    assert len(home_data["mood_mixes"]) > 0
+    assert len(home_data["featured_artists"]) > 0
+
+    # 9. Clean up playlist
+    del_pl = client.delete(f"/api/playlists/{playlist_id}", headers=headers)
+    assert del_pl.status_code == 200
+

@@ -91,7 +91,12 @@ class ContentBasedRecommender:
         self.is_fitted = True
         logger.info(f"Recommender fitted successfully with {len(songs)} songs. Feature vector dimension: {self.combined_matrix.shape[1]}")
 
-    def build_user_vector(self, user_pref: Dict[str, Any], liked_song_ids: Optional[List[str]] = None) -> np.ndarray:
+    def build_user_vector(
+        self,
+        user_pref: Dict[str, Any],
+        liked_song_ids: Optional[List[str]] = None,
+        listened_song_ids: Optional[List[str]] = None
+    ) -> np.ndarray:
         if not self.is_fitted:
             raise ValueError("Recommender model has not been fitted.")
 
@@ -131,20 +136,30 @@ class ContentBasedRecommender:
         if norm > 0:
             user_vector = user_vector / norm
 
-        # 4. If user has liked songs, blend with centroid of liked songs
+        # 4. If user has liked or listened songs, blend with centroid of interactions
+        interaction_vectors = []
         if liked_song_ids:
             liked_indices = [self.song_id_to_idx[sid] for sid in liked_song_ids if sid in self.song_id_to_idx]
             if liked_indices:
-                liked_vectors = self.combined_matrix[liked_indices]
-                liked_centroid = np.mean(liked_vectors, axis=0, keepdims=True)
-                liked_norm = np.linalg.norm(liked_centroid)
-                if liked_norm > 0:
-                    liked_centroid = liked_centroid / liked_norm
-                # Blend 65% user preferences + 35% actual liked behavior
-                user_vector = 0.65 * user_vector + 0.35 * liked_centroid
-                u_norm = np.linalg.norm(user_vector)
-                if u_norm > 0:
-                    user_vector = user_vector / u_norm
+                # Liked songs get double weight
+                interaction_vectors.extend(self.combined_matrix[liked_indices])
+                interaction_vectors.extend(self.combined_matrix[liked_indices])
+        
+        if listened_song_ids:
+            listened_indices = [self.song_id_to_idx[sid] for sid in listened_song_ids if sid in self.song_id_to_idx]
+            if listened_indices:
+                interaction_vectors.extend(self.combined_matrix[listened_indices])
+
+        if interaction_vectors:
+            centroid = np.mean(np.array(interaction_vectors), axis=0, keepdims=True)
+            c_norm = np.linalg.norm(centroid)
+            if c_norm > 0:
+                centroid = centroid / c_norm
+            # Blend 55% preferences + 45% real listening/like history
+            user_vector = 0.55 * user_vector + 0.45 * centroid
+            u_norm = np.linalg.norm(user_vector)
+            if u_norm > 0:
+                user_vector = user_vector / u_norm
 
         return user_vector
 
@@ -153,6 +168,7 @@ class ContentBasedRecommender:
         user_pref: Dict[str, Any],
         disliked_song_ids: Optional[List[str]] = None,
         liked_song_ids: Optional[List[str]] = None,
+        listened_song_ids: Optional[List[str]] = None,
         top_k: int = 10,
         genre_filter: Optional[str] = None,
         mood_filter: Optional[str] = None,
@@ -161,7 +177,7 @@ class ContentBasedRecommender:
             return []
 
         disliked_set = set(disliked_song_ids or [])
-        user_vec = self.build_user_vector(user_pref, liked_song_ids)
+        user_vec = self.build_user_vector(user_pref, liked_song_ids, listened_song_ids)
 
         # Cosine similarity between user vector and all songs
         sims = np.dot(self.combined_matrix, user_vec.T).flatten()
@@ -222,4 +238,23 @@ class ContentBasedRecommender:
 
         return results
 
+    def record_listening(self, user_id: str, song_id: str):
+        """Track real-time song play to adapt user vector on next recommendation."""
+        if not hasattr(self, "_user_listening"):
+            self._user_listening = {}
+        if user_id not in self._user_listening:
+            self._user_listening[user_id] = []
+        self._user_listening[user_id].append(song_id)
+        if len(self._user_listening[user_id]) > 50:
+            self._user_listening[user_id] = self._user_listening[user_id][-50:]
+
+    def record_feedback(self, user_id: str, song_id: str, feedback: str):
+        """Track user feedback (like/dislike) in memory."""
+        if not hasattr(self, "_user_feedback"):
+            self._user_feedback = {}
+        if user_id not in self._user_feedback:
+            self._user_feedback[user_id] = {}
+        self._user_feedback[user_id][song_id] = feedback
+
 recommender = ContentBasedRecommender()
+

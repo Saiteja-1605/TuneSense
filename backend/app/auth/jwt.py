@@ -60,3 +60,20 @@ async def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] =
             detail="User account not found.",
         )
     return user
+
+async def get_optional_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> Optional[Dict[str, Any]]:
+    if not credentials or not credentials.credentials:
+        return None
+    try:
+        payload = jwt.decode(credentials.credentials, settings.JWT_SECRET, algorithms=[settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        if not user_id:
+            return None
+        users_collection = db_manager.get_collection("users")
+        user = await users_collection.find_one({"_id": user_id})
+        if not user:
+            user = await users_collection.find_one({"user_id": user_id})
+        return user
+    except Exception:
+        return None
+

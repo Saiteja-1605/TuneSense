@@ -23,8 +23,8 @@ export const RegisterPage = () => {
     setSubmitting(true);
     try {
       await register(name, email, password);
-      // Navigate to Preferences first so user can customize their tastes immediately!
-      navigate('/preferences');
+      // Navigate to onboarding taste wizard so user can initialize their ML recommendations immediately!
+      navigate('/onboarding');
     } catch (err) {
       const msg = err.response?.data?.detail || 'Registration failed. Please try a different email.';
       setError(msg);

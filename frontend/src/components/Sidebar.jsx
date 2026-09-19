@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard,
+  Home,
+  Search,
   Compass,
-  Music,
+  Library,
   History,
   BarChart3,
   Sliders,
@@ -12,14 +13,16 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/discover', label: 'Discover & ML', icon: Compass, badge: 'AI' },
-  { to: '/catalog', label: 'Song Library', icon: Music },
+  { to: '/home', label: 'Home', icon: Home },
+  { to: '/search', label: 'Search & Explore', icon: Search },
+  { to: '/discover', label: 'AI Taste Radar', icon: Compass, badge: 'ML' },
+  { to: '/library', label: 'Your Library', icon: Library },
   { to: '/history', label: 'History', icon: History },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/preferences', label: 'Music Tastes', icon: Sliders },
   { to: '/profile', label: 'Profile', icon: User },
 ];
+
 
 export const Sidebar = () => {
   return (

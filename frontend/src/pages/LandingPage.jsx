@@ -28,8 +28,9 @@ export const LandingPage = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold tracking-wide shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Next-Gen Content-Based Recommendation Architecture</span>
+            <span>Discover music that understands your taste.</span>
           </div>
+
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.1] max-w-4xl mx-auto">
             Discover Music Engineered For Your Exact{' '}

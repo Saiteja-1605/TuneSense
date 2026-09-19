@@ -1,13 +1,22 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { PlayerProvider } from './context/PlayerContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './layouts/AppLayout';
 
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
-import { DashboardPage } from './pages/DashboardPage';
+import { OnboardingPage } from './pages/OnboardingPage';
+
+import { HomePage } from './pages/HomePage';
+import { SearchPage } from './pages/SearchPage';
+import { ArtistPage } from './pages/ArtistPage';
+import { AlbumPage } from './pages/AlbumPage';
+import { PlaylistPage } from './pages/PlaylistPage';
+import { LibraryPage } from './pages/LibraryPage';
+import { LikedSongsPage } from './pages/LikedSongsPage';
 import { DiscoverPage } from './pages/DiscoverPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { SongDetailPage } from './pages/SongDetailPage';
@@ -19,37 +28,57 @@ import { ProfilePage } from './pages/ProfilePage';
 export function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+      <PlayerProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-          {/* Protected Application Routes */}
-          <Route
-            element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/discover" element={<DiscoverPage />} />
-            <Route path="/catalog" element={<CatalogPage />} />
-            <Route path="/songs/:id" element={<SongDetailPage />} />
-            <Route path="/preferences" element={<PreferencesPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
+            {/* Onboarding Flow (Standalone Protected) */}
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <OnboardingPage />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Main Music App with Persistent Audio Player */}
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/dashboard" element={<HomePage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/artists/:id" element={<ArtistPage />} />
+              <Route path="/albums/:id" element={<AlbumPage />} />
+              <Route path="/playlists/:id" element={<PlaylistPage />} />
+              <Route path="/library" element={<LibraryPage />} />
+              <Route path="/library/liked" element={<LikedSongsPage />} />
+              <Route path="/discover" element={<DiscoverPage />} />
+              <Route path="/catalog" element={<CatalogPage />} />
+              <Route path="/songs/:id" element={<SongDetailPage />} />
+              <Route path="/preferences" element={<PreferencesPage />} />
+              <Route path="/history" element={<HistoryPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </PlayerProvider>
     </AuthProvider>
   );
 }
 
 export default App;
+

@@ -1,4 +1,4 @@
-# TuneSense – Personalized Music Recommendation System
+# TuneSense – Personalized Music Streaming & Discovery Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -6,7 +6,8 @@
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.5-F7931E.svg?logo=scikitlearn&logoColor=white)](https://scikit-learn.org)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248.svg?logo=mongodb&logoColor=white)](https://www.mongodb.com)
 
-> **TuneSense** is a full-stack, personalized music recommendation web application powered by content-based machine learning, semantic text vectorization, continuous acoustic feature modeling, and interactive data visualizations.
+> **TuneSense** — *"Discover music that understands your taste."*  
+> A full-stack, production music streaming and discovery application featuring legal audio playback, a persistent global audio player, multi-entity catalog architecture, real-time listening history tracking, user playlists, and a content-based machine learning recommendation engine.
 
 ---
 
@@ -14,41 +15,56 @@
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
-- [System Architecture](#system-architecture)
+- [Music Catalog & Streaming Architecture](#music-catalog--streaming-architecture)
 - [Machine Learning Recommendation Engine](#machine-learning-recommendation-engine)
-- [Database Schema](#database-schema)
+- [Database Collections](#database-collections)
 - [REST API Reference](#rest-api-reference)
 - [Local Development Setup](#local-development-setup)
 - [Environment Variables](#environment-variables)
 - [Running Backend & Frontend](#running-backend--frontend)
-- [Database Seeding](#database-seeding)
 - [Render Production Deployment](#render-production-deployment)
-- [Future Enhancements](#future-enhancements)
 
 ---
 
 ## Overview
 
-TuneSense was built to demonstrate a complete, production-grade recommendation pipeline that moves beyond basic metadata matching. Instead of relying on closed third-party APIs, TuneSense implements an in-house **content-based recommendation engine** in Python that computes high-dimensional similarity across genre taxonomies, mood indicators, linguistic elements, and normalized acoustic attributes (energy, danceability, tempo, acousticness, valence).
+TuneSense is a full-featured music streaming and discovery platform designed to give listeners the seamless experience of modern streaming applications while powered by an explainable, in-house **content-based machine learning engine**.
 
-The platform pairs this engine with explainable AI (generating human-readable rationales for every recommendation), active user feedback loops, persistent recommendation history, and rich interactive visual analytics.
+Rather than displaying static placeholder buttons, TuneSense streams real legal audio (Creative Commons and open public-domain streams), maintains uninterrupted playback across route navigation using an HTML5 Web Audio state machine, logs active listening events, and dynamically shifts recommendation vectors based on user plays, likes, and dislikes.
 
 ---
 
 ## Key Features
 
-- **Personalized Music Discovery**: Generates ranked song recommendations matching user preferences and liked songs with dynamic similarity match scores.
-- **Explainable AI (XAI)**: Provides clear explanations for why each track was chosen (e.g., *"Recommended because it matches your favorite genre (Pop), fits your Energetic mood, and aligns closely with your desired tempo and rhythm (Energy: 85%, Danceability: 82%)"*).
-- **Active Feedback Loop**: Like songs to steer future recommendations; dislike songs to immediately suppress them from your feed.
-- **Acoustic Fingerprinting**: Continuous sliders for target energy, danceability, acousticness, and valence.
+- **Real Audio Streaming & Global Persistent Player**:
+  - Non-interrupting playback while navigating across the application.
+  - Controls: Play/Pause, Seek bar with elapsed & total duration, Next/Previous, Shuffle, 3-state Repeat (off/all/one), Volume slider with mute toggle.
+  - Slide-over "Up Next" Queue Drawer with reordering and removal.
+  - "Add to Playlist" modal for instant assignment or new playlist creation on the fly.
+- **Dynamic Personalized Home Feed (`/home`)**:
+  - Time-aware greetings (*"Good evening, Alex"*).
+  - Quick picks based on recent listening.
+  - *Made For You* AI recommendations with match percentages and human-readable explanations.
+  - *Because You Liked* recommendation clusters.
+  - *Mood Stations* (Upbeat, Chill, Focus, Energetic, Melancholic, Romantic, Intense).
+  - Trending platform tracks, Featured Artists, and Popular Albums.
+- **Universal Search & Explore (`/search`)**:
+  - Instant debounced multi-entity search across Songs, Artists, and Albums.
+  - Category filters and vibrant genre/mood exploration tiles.
+- **Comprehensive Catalog Architecture**:
+  - **Songs**: 120 tracks with verified streaming URLs, exact durations, cover art, and acoustic dimensions.
+  - **Artists**: 24 artists across 12 genres with portraits, biographies, top tracks, and related artists.
+  - **Albums**: 24 albums with full tracklists and metadata.
+  - **Playlists**: Full CRUD for user playlists (create, play all, shuffle, add/remove songs, public/private sharing).
+  - **User Library & Liked Songs**: Dedicated library hub for saved playlists, liked tracks, and listening history.
+- **Taste Calibration Onboarding (`/onboarding`)**:
+  - 3-step interactive onboarding for new listeners to select favorite genres, moods, and acoustic dials before launching recommendations.
+- **Content-Based ML Recommendation Engine**:
+  - Combines TF-IDF semantic metadata vectors with normalized acoustic feature vectors.
+  - Incorporates listening history and liked track centroids to continuously adapt recommendations as the user listens.
 - **Interactive Visual Analytics**:
-  - Recommended Genre Distribution (Bar chart)
-  - Mood Proportions Breakdown (Donut/Pie chart)
-  - Feedback Loop Sentiment (Likes vs Dislikes ratio)
-  - User Profile Radar Chart (Target preferences vs Library average)
-  - Recommendation Telemetry Trend (Area chart over time)
-- **120+ Song Seed Library**: Spanning 12 distinct genres (Pop, Rock, Electronic, Hip-Hop, R&B, Indie, Jazz, Classical, Ambient, Latin, Metal, Folk).
-- **Secure Authentication**: JWT-based session tokens, Passlib bcrypt salted password hashing, and protected routes.
+  - Recommended Genre Distribution, Mood Breakdown, User Preference Radar, Feedback Sentiment, and Telemetry Trends.
+
 
 ---
 

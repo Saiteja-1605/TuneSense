@@ -1,0 +1,386 @@
+[
+  {
+    "album_id": "alb_001",
+    "title": "Neon Reflections",
+    "artist": "Luna Vance",
+    "artist_id": "art_001",
+    "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-03-15",
+    "genre": "Pop",
+    "songs": [
+      "song_001",
+      "song_006",
+      "song_025",
+      "song_049",
+      "song_073"
+    ]
+  },
+  {
+    "album_id": "alb_002",
+    "title": "Sunlit Memories",
+    "artist": "Maya Lin",
+    "artist_id": "art_002",
+    "cover": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-05-20",
+    "genre": "Pop",
+    "songs": [
+      "song_002",
+      "song_007",
+      "song_050",
+      "song_074",
+      "song_098"
+    ]
+  },
+  {
+    "album_id": "alb_003",
+    "title": "Signal Boost",
+    "artist": "Electric Echoes",
+    "artist_id": "art_003",
+    "cover": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-11-10",
+    "genre": "Pop",
+    "songs": [
+      "song_003",
+      "song_008",
+      "song_075",
+      "song_099"
+    ]
+  },
+  {
+    "album_id": "alb_004",
+    "title": "Rust & Glory",
+    "artist": "The Silver Halos",
+    "artist_id": "art_004",
+    "cover": "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-09-08",
+    "genre": "Rock",
+    "songs": [
+      "song_004",
+      "song_011",
+      "song_016",
+      "song_028",
+      "song_100"
+    ]
+  },
+  {
+    "album_id": "alb_005",
+    "title": "Howl at Dawn",
+    "artist": "Crimson Wolves",
+    "artist_id": "art_005",
+    "cover": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-01-19",
+    "genre": "Rock",
+    "songs": [
+      "song_005",
+      "song_012",
+      "song_017",
+      "song_029",
+      "song_053"
+    ]
+  },
+  {
+    "album_id": "alb_006",
+    "title": "Kinetic Theory",
+    "artist": "AeroPulse",
+    "artist_id": "art_006",
+    "cover": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-04-12",
+    "genre": "Electronic",
+    "songs": [
+      "song_021",
+      "song_026",
+      "song_030",
+      "song_054",
+      "song_078"
+    ]
+  },
+  {
+    "album_id": "alb_007",
+    "title": "Digital Frontier",
+    "artist": "CyberGrid",
+    "artist_id": "art_007",
+    "cover": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-08-25",
+    "genre": "Electronic",
+    "songs": [
+      "song_022",
+      "song_027",
+      "song_055",
+      "song_079",
+      "song_103"
+    ]
+  },
+  {
+    "album_id": "alb_008",
+    "title": "City Lights",
+    "artist": "Kendall Verse",
+    "artist_id": "art_008",
+    "cover": "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-02-14",
+    "genre": "Hip-Hop",
+    "songs": [
+      "song_031",
+      "song_036",
+      "song_080",
+      "song_104"
+    ]
+  },
+  {
+    "album_id": "alb_009",
+    "title": "Crown & Kingdom",
+    "artist": "Nova Jay",
+    "artist_id": "art_009",
+    "cover": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-12-01",
+    "genre": "Hip-Hop",
+    "songs": [
+      "song_009",
+      "song_032",
+      "song_033",
+      "song_037",
+      "song_105"
+    ]
+  },
+  {
+    "album_id": "alb_010",
+    "title": "Late Night Confessions",
+    "artist": "Solomon Ray",
+    "artist_id": "art_010",
+    "cover": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-06-07",
+    "genre": "R&B",
+    "songs": [
+      "song_010",
+      "song_034",
+      "song_041",
+      "song_046",
+      "song_058"
+    ]
+  },
+  {
+    "album_id": "alb_011",
+    "title": "Silk & Honey",
+    "artist": "Amara Skye",
+    "artist_id": "art_011",
+    "cover": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-10-20",
+    "genre": "R&B",
+    "songs": [
+      "song_035",
+      "song_042",
+      "song_047",
+      "song_059",
+      "song_083"
+    ]
+  },
+  {
+    "album_id": "alb_012",
+    "title": "Northern Wilds",
+    "artist": "The Pine Forest",
+    "artist_id": "art_012",
+    "cover": "https://images.unsplash.com/photo-1448375240586-882707db888b?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-03-29",
+    "genre": "Indie",
+    "songs": [
+      "song_051",
+      "song_056",
+      "song_060",
+      "song_084",
+      "song_108"
+    ]
+  },
+  {
+    "album_id": "alb_013",
+    "title": "Phosphor",
+    "artist": "Glass Lanterns",
+    "artist_id": "art_013",
+    "cover": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-07-14",
+    "genre": "Indie",
+    "songs": [
+      "song_013",
+      "song_052",
+      "song_057",
+      "song_085",
+      "song_109"
+    ]
+  },
+  {
+    "album_id": "alb_014",
+    "title": "Blue Midnight",
+    "artist": "Miles Sterling",
+    "artist_id": "art_014",
+    "cover": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-05-18",
+    "genre": "Jazz",
+    "songs": [
+      "song_014",
+      "song_038",
+      "song_061",
+      "song_066",
+      "song_110"
+    ]
+  },
+  {
+    "album_id": "alb_015",
+    "title": "Autumn in Soho",
+    "artist": "The Clara Vance Trio",
+    "artist_id": "art_015",
+    "cover": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-02-28",
+    "genre": "Jazz",
+    "songs": [
+      "song_015",
+      "song_039",
+      "song_062",
+      "song_063",
+      "song_067"
+    ]
+  },
+  {
+    "album_id": "alb_016",
+    "title": "Imperial Echoes",
+    "artist": "Vienna Philharmonic Soloists",
+    "artist_id": "art_016",
+    "cover": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-04-10",
+    "genre": "Classical",
+    "songs": [
+      "song_040",
+      "song_064",
+      "song_071",
+      "song_076",
+      "song_088",
+      "song_112"
+    ]
+  },
+  {
+    "album_id": "alb_017",
+    "title": "Preludes & Nocturnes",
+    "artist": "Elena Rostova",
+    "artist_id": "art_017",
+    "cover": "https://images.unsplash.com/photo-1520523839898-5071212e3e55?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-01-05",
+    "genre": "Classical",
+    "songs": [
+      "song_065",
+      "song_072",
+      "song_077",
+      "song_089",
+      "song_113"
+    ]
+  },
+  {
+    "album_id": "alb_018",
+    "title": "Interstellar Echoes",
+    "artist": "Cosmic Drift",
+    "artist_id": "art_018",
+    "cover": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-09-22",
+    "genre": "Ambient",
+    "songs": [
+      "song_018",
+      "song_081",
+      "song_086",
+      "song_090",
+      "song_114"
+    ]
+  },
+  {
+    "album_id": "alb_019",
+    "title": "Weightless Horizons",
+    "artist": "Ethera",
+    "artist_id": "art_019",
+    "cover": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-05-11",
+    "genre": "Ambient",
+    "songs": [
+      "song_019",
+      "song_043",
+      "song_082",
+      "song_087",
+      "song_115"
+    ]
+  },
+  {
+    "album_id": "alb_020",
+    "title": "Fuego y Sal",
+    "artist": "Mateo Vega",
+    "artist_id": "art_020",
+    "cover": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-06-21",
+    "genre": "Latin",
+    "songs": [
+      "song_020",
+      "song_044",
+      "song_068",
+      "song_091",
+      "song_096"
+    ]
+  },
+  {
+    "album_id": "alb_021",
+    "title": "Corazón Rebelde",
+    "artist": "Paloma Sol",
+    "artist_id": "art_021",
+    "cover": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-11-17",
+    "genre": "Latin",
+    "songs": [
+      "song_045",
+      "song_069",
+      "song_092",
+      "song_093",
+      "song_097",
+      "song_117"
+    ]
+  },
+  {
+    "album_id": "alb_022",
+    "title": "Abyssal Forge",
+    "artist": "Iron Obsidian",
+    "artist_id": "art_022",
+    "cover": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-10-13",
+    "genre": "Metal",
+    "songs": [
+      "song_070",
+      "song_094",
+      "song_101",
+      "song_106",
+      "song_118"
+    ]
+  },
+  {
+    "album_id": "alb_023",
+    "title": "Cataclysm",
+    "artist": "Vortex of Chaos",
+    "artist_id": "art_023",
+    "cover": "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2024-04-26",
+    "genre": "Metal",
+    "songs": [
+      "song_023",
+      "song_095",
+      "song_102",
+      "song_107",
+      "song_119"
+    ]
+  },
+  {
+    "album_id": "alb_024",
+    "title": "Whispering Pines",
+    "artist": "Caleb Rivera",
+    "artist_id": "art_024",
+    "cover": "https://images.unsplash.com/photo-1448375240586-882707db888b?w=500&auto=format&fit=crop&q=60",
+    "release_date": "2023-08-18",
+    "genre": "Folk",
+    "songs": [
+      "song_024",
+      "song_048",
+      "song_111",
+      "song_116",
+      "song_120"
+    ]
+  }
+]

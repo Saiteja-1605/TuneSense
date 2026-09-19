@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Play, Pause, ThumbsUp, ThumbsDown, Sparkles, ExternalLink, Compass } from 'lucide-react';
 import { recommendationsApi } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { usePlayer } from '../context/PlayerContext';
 
 // Color themes based on genre
 const GENRE_GRADIENTS = {
@@ -29,9 +30,23 @@ export const SongCard = ({
   showFullDetails = false,
 }) => {
   const { showToast } = useAuth();
+  const { currentTrack, isPlaying: isGlobalPlaying, playTrack, togglePlay } = usePlayer();
   const [feedback, setFeedback] = useState(initialFeedback);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  if (!song) return null;
+
+  const isCurrent = currentTrack?.song_id === song.song_id;
+  const isAudioPlaying = isCurrent && isGlobalPlaying;
+
+  const handlePlayClick = () => {
+    if (isCurrent) {
+      togglePlay();
+    } else {
+      playTrack(song);
+    }
+  };
+
 
   if (!song) return null;
 
@@ -87,25 +102,37 @@ export const SongCard = ({
 
         {/* Song Info & Preview Button */}
         <div className="flex items-start gap-3.5 mb-3">
-          {/* Simulated Music Player Disc */}
+          {/* Music Player Cover & Action */}
           <button
-            onClick={() => setIsPlaying(!isPlaying)}
-            title={isPlaying ? "Pause simulated preview" : "Play simulated audio preview"}
-            className="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-500 p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-transform"
+            type="button"
+            onClick={handlePlayClick}
+            title={isAudioPlaying ? 'Pause audio stream' : 'Play streaming audio'}
+            className="w-12 h-12 rounded-xl bg-purple-950 p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-transform relative overflow-hidden border border-white/10"
           >
-            <div className="w-full h-full bg-[#111322] rounded-[10px] flex items-center justify-center relative overflow-hidden">
-              {isPlaying ? (
-                <div className="flex items-end gap-0.5 h-5">
-                  <span className="w-1 bg-cyan-400 rounded-full eq-bar-1" />
-                  <span className="w-1 bg-purple-400 rounded-full eq-bar-2" />
-                  <span className="w-1 bg-pink-400 rounded-full eq-bar-3" />
-                  <span className="w-1 bg-cyan-300 rounded-full eq-bar-4" />
+            {song.album_art ? (
+              <img
+                src={song.album_art}
+                alt={song.title}
+                className="w-full h-full object-cover rounded-[10px]"
+              />
+            ) : null}
+            <div
+              className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity ${
+                isAudioPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              }`}
+            >
+              {isAudioPlaying ? (
+                <div className="flex items-end gap-0.5 h-4">
+                  <span className="w-1 bg-cyan-400 rounded-full animate-pulse h-3" />
+                  <span className="w-1 bg-purple-400 rounded-full animate-pulse h-4" />
+                  <span className="w-1 bg-pink-400 rounded-full animate-pulse h-2" />
                 </div>
               ) : (
-                <Play className="w-5 h-5 text-white ml-0.5" />
+                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
               )}
             </div>
           </button>
+
 
           <div className="min-w-0 flex-1">
             <Link

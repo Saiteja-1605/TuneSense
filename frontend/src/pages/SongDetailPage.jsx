@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { songsApi } from '../api';
 import { AudioFeaturesBar } from '../components/AudioFeaturesBar';
 import { SongCard } from '../components/SongCard';
+import { usePlayer } from '../context/PlayerContext';
 import {
   ArrowLeft,
   Disc,
@@ -11,7 +12,9 @@ import {
   Globe,
   Flame,
   Music,
-  Disc3
+  Disc3,
+  Play,
+  Pause,
 } from 'lucide-react';
 
 export const SongDetailPage = () => {
@@ -20,6 +23,19 @@ export const SongDetailPage = () => {
   const [similarSongs, setSimilarSongs] = useState([]);
   const [explanation, setExplanation] = useState('');
   const [loading, setLoading] = useState(true);
+  const { currentTrack, isPlaying, playTrack, togglePlay } = usePlayer();
+
+  const isCurrent = currentTrack?.song_id === song?.song_id;
+  const isAudioPlaying = isCurrent && isPlaying;
+
+  const handlePlayMainTrack = () => {
+    if (!song) return;
+    if (isCurrent) {
+      togglePlay();
+    } else {
+      playTrack(song, [song, ...similarSongs]);
+    }
+  };
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -64,21 +80,39 @@ export const SongDetailPage = () => {
     <div className="space-y-8 animate-in fade-in duration-300 max-w-5xl mx-auto">
       {/* Back navigation */}
       <Link
-        to="/discover"
+        to="/search"
         className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back to Recommendations</span>
+        <span>Back to Search & Explore</span>
       </Link>
 
       {/* Main Track Banner */}
       <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-purple-950/40 via-[#121424] to-[#090a10] border border-purple-500/20 shadow-2xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-          {/* Simulated Vinyl Disc Art */}
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-400 p-1 flex-shrink-0 shadow-2xl shadow-purple-600/30">
-            <div className="w-full h-full bg-[#0e101f] rounded-[14px] flex items-center justify-center">
-              <Disc className="w-12 h-12 text-cyan-300 animate-spin" style={{ animationDuration: '6s' }} />
-            </div>
+          {/* Artwork & Play overlay */}
+          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden shrink-0 shadow-2xl relative group bg-purple-950 border border-white/10">
+            <img
+              src={
+                song.album_art ||
+                'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&auto=format&fit=crop&q=60'
+              }
+              alt={song.title}
+              className="w-full h-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={handlePlayMainTrack}
+              className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100"
+            >
+              <div className="w-12 h-12 rounded-full bg-cyan-400 text-black flex items-center justify-center shadow-lg">
+                {isAudioPlaying ? (
+                  <Pause className="w-5 h-5 fill-current" />
+                ) : (
+                  <Play className="w-5 h-5 fill-current ml-0.5" />
+                )}
+              </div>
+            </button>
           </div>
 
           <div className="space-y-2 flex-1">
@@ -101,6 +135,27 @@ export const SongDetailPage = () => {
             <p className="text-base sm:text-lg text-slate-300 font-medium">
               {song.artist} <span className="text-slate-500 font-normal">• {song.album}</span>
             </p>
+
+            <div className="pt-2 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handlePlayMainTrack}
+                className="px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 hover:to-indigo-400 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-purple-500/25 transition-all active:scale-95"
+              >
+                {isAudioPlaying ? (
+                  <>
+                    <Pause className="w-4 h-4 fill-current" />
+                    Pause Track
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4 fill-current ml-0.5" />
+                    Stream Track
+                  </>
+                )}
+              </button>
+            </div>
+
 
             <p className="text-xs sm:text-sm text-slate-400 max-w-2xl pt-1 leading-relaxed">
               {song.description}

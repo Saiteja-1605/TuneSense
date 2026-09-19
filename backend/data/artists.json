@@ -1,0 +1,290 @@
+[
+  {
+    "artist_id": "art_001",
+    "name": "Luna Vance",
+    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Pop",
+      "Synthpop",
+      "Electronic"
+    ],
+    "bio": "Luna Vance is an electronic synth-pop pioneer blending futuristic analog synthesizers with emotional vocal hooks and dance rhythms.",
+    "popularity": 92
+  },
+  {
+    "artist_id": "art_002",
+    "name": "Maya Lin",
+    "image": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Pop",
+      "Acoustic Pop",
+      "Indie"
+    ],
+    "bio": "Award-winning vocalist and songwriter celebrated for sunny acoustic melodies and uplifting summer anthems.",
+    "popularity": 87
+  },
+  {
+    "artist_id": "art_003",
+    "name": "Electric Echoes",
+    "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Pop",
+      "Dance Pop",
+      "EDM"
+    ],
+    "bio": "Chart-topping production duo crafting high-energy club anthems and festival mainstage bangers.",
+    "popularity": 85
+  },
+  {
+    "artist_id": "art_004",
+    "name": "The Silver Halos",
+    "image": "https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Rock",
+      "Alternative Rock",
+      "Garage"
+    ],
+    "bio": "Four-piece indie-rock powerhouse known for thunderous riffs, raw stadium vocals, and explosive live performances.",
+    "popularity": 84
+  },
+  {
+    "artist_id": "art_005",
+    "name": "Crimson Wolves",
+    "image": "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Rock",
+      "Post-Punk",
+      "Darkwave"
+    ],
+    "bio": "Atmospheric post-punk and desert rock outfit with brooding basslines and searing guitar solos.",
+    "popularity": 79
+  },
+  {
+    "artist_id": "art_006",
+    "name": "AeroPulse",
+    "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Electronic",
+      "Progressive House",
+      "EDM"
+    ],
+    "bio": "Electronic sound architect crafting euphoric progressive house, kinetic drops, and sprawling sonic landscapes.",
+    "popularity": 91
+  },
+  {
+    "artist_id": "art_007",
+    "name": "CyberGrid",
+    "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Electronic",
+      "Synthwave",
+      "Cyberpunk"
+    ],
+    "bio": "Outrun and synthwave producer delivering cinematic 80s analog nostalgia with driving synthesizer arpeggios.",
+    "popularity": 88
+  },
+  {
+    "artist_id": "art_008",
+    "name": "Kendall Verse",
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Hip-Hop",
+      "Trap",
+      "East Coast"
+    ],
+    "bio": "Lyrical titan merging intricate storytelling with crushing 808s and modern hip-hop rhythmics.",
+    "popularity": 94
+  },
+  {
+    "artist_id": "art_009",
+    "name": "Nova Jay",
+    "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Hip-Hop",
+      "Boom Bap",
+      "Conscious Rap"
+    ],
+    "bio": "Conscious rap lyricist carrying the torch of classic boom-bap with jazz-infused boom-bap samples.",
+    "popularity": 86
+  },
+  {
+    "artist_id": "art_010",
+    "name": "Solomon Ray",
+    "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "R&B",
+      "Contemporary R&B",
+      "Soul"
+    ],
+    "bio": "Silky falsetto vocalist and multi-instrumentalist crafting late-night slow jams and neo-soul grooves.",
+    "popularity": 89
+  },
+  {
+    "artist_id": "art_011",
+    "name": "Amara Skye",
+    "image": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "R&B",
+      "Neo-Soul",
+      "Soulful Pop"
+    ],
+    "bio": "Soul chanteuse known for warm Rhodes piano ballads, emotional resonance, and velvety vocal harmonies.",
+    "popularity": 88
+  },
+  {
+    "artist_id": "art_012",
+    "name": "The Pine Forest",
+    "image": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Indie",
+      "Indie Folk",
+      "Acoustic"
+    ],
+    "bio": "Woodland folk ensemble creating cozy acoustic soundscapes with fingerstyle guitar, cello, and harmonies.",
+    "popularity": 83
+  },
+  {
+    "artist_id": "art_013",
+    "name": "Glass Lanterns",
+    "image": "https://images.unsplash.com/photo-1520523839898-5071212e3e55?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Indie",
+      "Dream Pop",
+      "Shoegaze"
+    ],
+    "bio": "Shimmering dream-pop quartet blending tape flutter, chorus-drenched guitars, and airy vocals.",
+    "popularity": 80
+  },
+  {
+    "artist_id": "art_014",
+    "name": "Miles Sterling",
+    "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Jazz",
+      "Cool Jazz",
+      "Bebop"
+    ],
+    "bio": "Muted trumpet virtuoso creating smoky, late-night jazz club atmospheres with upright double bass.",
+    "popularity": 82
+  },
+  {
+    "artist_id": "art_015",
+    "name": "The Clara Vance Trio",
+    "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Jazz",
+      "Piano Jazz",
+      "Bossa Nova"
+    ],
+    "bio": "Acoustic jazz piano trio blending romantic bossa nova swing with sophisticated harmonic improvisations.",
+    "popularity": 81
+  },
+  {
+    "artist_id": "art_016",
+    "name": "Vienna Philharmonic Soloists",
+    "image": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Classical",
+      "Symphony",
+      "Orchestral"
+    ],
+    "bio": "World-class European classical chamber soloists performing timeless neoclassical and orchestral masterpieces.",
+    "popularity": 84
+  },
+  {
+    "artist_id": "art_017",
+    "name": "Elena Rostova",
+    "image": "https://images.unsplash.com/photo-1520523839898-5071212e3e55?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Classical",
+      "Piano Solo",
+      "Neoclassical"
+    ],
+    "bio": "Virtuoso neoclassical concert pianist renowned for intimate felt piano nocturnes and sweeping emotional preludes.",
+    "popularity": 85
+  },
+  {
+    "artist_id": "art_018",
+    "name": "Cosmic Drift",
+    "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Ambient",
+      "Space Ambient",
+      "Drone"
+    ],
+    "bio": "Deep space ambient sound designer creating weightless analog synth drones for sleep, focus, and astral travel.",
+    "popularity": 83
+  },
+  {
+    "artist_id": "art_019",
+    "name": "Ethera",
+    "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Ambient",
+      "Meditation",
+      "Relaxation"
+    ],
+    "bio": "Mindfulness sound composer specializing in 432Hz ambient soundscapes and crystalline acoustic resonance.",
+    "popularity": 82
+  },
+  {
+    "artist_id": "art_020",
+    "name": "Mateo Vega",
+    "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Latin",
+      "Reggaeton",
+      "Latin Pop"
+    ],
+    "bio": "Fiery Latin sensation combining Caribbean dembow rhythms, Spanish vocal passion, and modern urban club heat.",
+    "popularity": 93
+  },
+  {
+    "artist_id": "art_021",
+    "name": "Paloma Sol",
+    "image": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Latin",
+      "Bachata",
+      "Salsa"
+    ],
+    "bio": "Beloved tropical songstress blending traditional Dominican bachata guitar work with buoyant modern dance beats.",
+    "popularity": 89
+  },
+  {
+    "artist_id": "art_022",
+    "name": "Iron Obsidian",
+    "image": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Metal",
+      "Thrash Metal",
+      "Heavy Metal"
+    ],
+    "bio": "Heavy metal juggernaut delivering relentless double-kick blast beats, blistering technical solos, and roar vocals.",
+    "popularity": 81
+  },
+  {
+    "artist_id": "art_023",
+    "name": "Vortex of Chaos",
+    "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Metal",
+      "Metalcore",
+      "Power Metal"
+    ],
+    "bio": "Symphonic metalcore outfit merging operatic string sections with brutal breakdown riffs and soaring choruses.",
+    "popularity": 83
+  },
+  {
+    "artist_id": "art_024",
+    "name": "Caleb Rivera",
+    "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop&q=60",
+    "genres": [
+      "Folk",
+      "Bluegrass",
+      "Americana"
+    ],
+    "bio": "Appalachian folk troubadour weaving poignant tales of wandering paths with fingerstyle banjo, guitar, and fiddle.",
+    "popularity": 84
+  }
+]
