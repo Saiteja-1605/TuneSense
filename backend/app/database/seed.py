@@ -8,8 +8,11 @@ logger = logging.getLogger("tunesense.seed")
 def load_songs_dataset() -> List[Dict[str, Any]]:
     # Search common locations for data/songs.json
     candidates = [
+        os.path.join(os.path.dirname(__file__), "data", "songs.json"),
+        os.path.join(os.path.dirname(__file__), "..", "..", "data", "songs.json"),
         os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "songs.json"),
         os.path.join(os.getcwd(), "data", "songs.json"),
+        os.path.join(os.getcwd(), "backend", "data", "songs.json"),
         os.path.join(os.getcwd(), "..", "data", "songs.json"),
     ]
     for p in candidates:

@@ -30,8 +30,7 @@ services:
     runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    plan: free
+    staticPublishPath: dist
     routes:
       - type: rewrite
         source: /*
