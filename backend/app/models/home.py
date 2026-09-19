@@ -12,17 +12,25 @@ class MoodMix(BaseModel):
     cover: str
     songs: List[Song]
 
-class BecauseYouLiked(BaseModel):
-    anchor_song: Song
-    recommendations: List[Song]
+class MadeForYouItem(BaseModel):
+    song: Song
+    score: float = 85.0
+    reason: str = "Matches your musical vibe & preferred energy"
+
+class BecauseYouLikedItem(BaseModel):
+    liked_song_id: str
+    liked_title: str
+    liked_artist: str = ""
+    similar_songs: List[Song] = []
 
 class HomeResponse(BaseModel):
     greeting: str
     recently_played: List[Song] = []
-    made_for_you: List[Song] = []
-    because_you_liked: Optional[BecauseYouLiked] = None
+    made_for_you: List[MadeForYouItem] = []
+    because_you_liked: List[BecauseYouLikedItem] = []
     trending: List[Song] = []
     mood_mixes: List[MoodMix] = []
     featured_artists: List[Artist] = []
     featured_albums: List[Album] = []
+    popular_albums: List[Album] = []
     user_playlists: List[Playlist] = []

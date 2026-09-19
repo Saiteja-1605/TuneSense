@@ -9,11 +9,11 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || '/home';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +33,20 @@ export const LoginPage = () => {
   const handleDemoFill = () => {
     setEmail('alex@tunesense.io');
     setPassword('DemoPass123!');
+  };
+
+  const handleInstantDemo = async () => {
+    setError('');
+    setSubmitting(true);
+    try {
+      await demoLogin();
+      navigate(from, { replace: true });
+    } catch (err) {
+      const msg = err.response?.data?.detail || 'Demo login failed. Please try again.';
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -112,19 +126,30 @@ export const LoginPage = () => {
           </button>
         </form>
 
-        {/* Quick Demo Fill button */}
-        <div className="pt-2 border-t border-white/5 flex flex-col items-center gap-3 text-center">
-          <button
-            type="button"
-            onClick={handleDemoFill}
-            className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
-          >
-            Fill sample demo credentials
-          </button>
+        {/* Quick Demo Fill and Instant Access */}
+        <div className="pt-3 border-t border-white/5 flex flex-col items-center gap-2.5 text-center">
+          <div className="flex items-center justify-center gap-3 text-[11px]">
+            <button
+              type="button"
+              onClick={handleDemoFill}
+              className="font-medium text-cyan-400 hover:text-cyan-300 transition-colors underline decoration-cyan-500/30 underline-offset-2"
+            >
+              Fill sample demo credentials
+            </button>
+            <span className="text-slate-600">•</span>
+            <button
+              type="button"
+              onClick={handleInstantDemo}
+              disabled={submitting}
+              className="font-semibold text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
+            >
+              <span>Instant 1-Click Demo</span>
+            </button>
+          </div>
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 pt-1">
             Don't have an account yet?{' '}
-            <Link to="/register" className="font-semibold text-purple-400 hover:text-purple-300">
+            <Link to="/register" className="font-semibold text-cyan-400 hover:text-cyan-300">
               Create account
             </Link>
           </p>

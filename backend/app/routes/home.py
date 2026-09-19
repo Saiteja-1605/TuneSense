@@ -1,7 +1,8 @@
 import datetime
+import asyncio
 from fastapi import APIRouter, Depends
 from typing import List
-from app.models.home import HomeResponse, MoodMix, BecauseYouLiked
+from app.models.home import HomeResponse, MoodMix, MadeForYouItem, BecauseYouLikedItem
 from app.models.song import Song
 from app.models.artist import Artist
 from app.models.album import Album
@@ -36,19 +37,33 @@ async def get_home_feed(current_user: dict = Depends(get_current_user)):
     feedback_coll = db_manager.get_collection("feedback")
     prefs_coll = db_manager.get_collection("user_preferences")
 
-    # 1. User preferences & likes
-    user_pref = await prefs_coll.find_one({"user_id": user_id}) or {
-        "favorite_genres": ["Pop", "Electronic"],
-        "favorite_moods": ["Upbeat", "Energetic"]
-    }
-    liked_docs = await liked_coll.find({"user_id": user_id}).sort("created_at", -1).to_list(length=50)
-    liked_song_ids = [d["song_id"] for d in liked_docs]
+    # 1. Fetch user preferences, likes, feedbacks, history concurrently
+    async def fetch_user_data():
+        pref_doc, liked_docs, feedback_docs, hist_docs = await asyncio.gather(
+            prefs_coll.find_one({"user_id": user_id}),
+            liked_coll.find({"user_id": user_id}).sort("created_at", -1).to_list(length=50),
+            feedback_coll.find({"user_id": user_id}).to_list(length=100),
+            history_coll.find({"user_id": user_id}).sort("listened_at", -1).limit(30).to_list(length=30)
+        )
+        return pref_doc, liked_docs, feedback_docs, hist_docs
 
-    feedback_docs = await feedback_coll.find({"user_id": user_id}).to_list(length=100)
+    user_pref, liked_docs, feedback_docs, hist_docs = await fetch_user_data()
+
+    if not user_pref:
+        user_pref = {
+            "favorite_genres": ["Pop", "Electronic"],
+            "favorite_moods": ["Upbeat", "Energetic"],
+            "languages": ["English"],
+            "energy": 0.75,
+            "danceability": 0.70,
+            "acousticness": 0.30,
+            "valence": 0.70
+        }
+
+    liked_song_ids = [d["song_id"] for d in liked_docs if "song_id" in d]
     disliked_ids = [d["song_id"] for d in feedback_docs if d.get("feedback") == "dislike"]
 
-    # 2. Recently Played from listening history
-    hist_docs = await history_coll.find({"user_id": user_id}).sort("listened_at", -1).limit(30).to_list(length=30)
+    # 2. Recently Played: batch fetch with $in
     seen_history_ids = set()
     unique_recent_ids = []
     for h in hist_docs:
@@ -60,12 +75,13 @@ async def get_home_feed(current_user: dict = Depends(get_current_user)):
                 break
 
     recently_played = []
-    for sid in unique_recent_ids:
-        s = await songs_coll.find_one({"song_id": sid})
-        if s:
-            recently_played.append(Song(**s))
+    if unique_recent_ids:
+        recent_cursor = songs_coll.find({"song_id": {"$in": unique_recent_ids}})
+        recent_docs = await recent_cursor.to_list(length=len(unique_recent_ids))
+        doc_map = {d["song_id"]: d for d in recent_docs}
+        recently_played = [Song(**doc_map[sid]) for sid in unique_recent_ids if sid in doc_map]
 
-    # If user has no listening history yet, populate with popular tracks
+    # If user has no listening history yet, populate recently played with popular tracks
     if not recently_played:
         pop_cursor = songs_coll.find({}).sort("popularity", -1).limit(6)
         pop_raw = await pop_cursor.to_list(length=6)
@@ -79,24 +95,64 @@ async def get_home_feed(current_user: dict = Depends(get_current_user)):
         listened_song_ids=list(seen_history_ids),
         top_k=8
     )
-    made_for_you = [Song(**r["song"]) for r in recs]
+    made_for_you: List[MadeForYouItem] = []
+    for r in recs:
+        try:
+            made_for_you.append(MadeForYouItem(
+                song=Song(**r["song"]),
+                score=float(r.get("score", 88.0)),
+                reason=str(r.get("reason", "Personalized for your acoustic taste"))
+            ))
+        except Exception:
+            continue
 
-    # 4. Because You Liked... section
-    because_you_liked = None
+    # Fallback if recommender had empty output
+    if not made_for_you:
+        pop_cursor = songs_coll.find({}).sort("popularity", -1).limit(8)
+        pop_raw = await pop_cursor.to_list(length=8)
+        for s in pop_raw:
+            made_for_you.append(MadeForYouItem(
+                song=Song(**s),
+                score=90.0,
+                reason=f"Popular in {s.get('genre', 'Music')} • Matches preferred energy"
+            ))
+
+    # 4. Because You Liked... section (List of items, always safe empty list for new users)
+    because_you_liked: List[BecauseYouLikedItem] = []
     if liked_song_ids:
-        anchor_id = liked_song_ids[0]
-        anchor_doc = await songs_coll.find_one({"song_id": anchor_id})
-        if anchor_doc:
-            similar_raw = recommender.get_similar_songs(anchor_id, top_k=6)
-            because_you_liked = BecauseYouLiked(
-                anchor_song=Song(**anchor_doc),
-                recommendations=[Song(**s) for s in similar_raw]
-            )
+        for lid in liked_song_ids[:2]:
+            anchor_doc = await songs_coll.find_one({"song_id": lid})
+            if anchor_doc:
+                similar_raw = recommender.get_similar_songs(lid, top_k=5)
+                if similar_raw:
+                    because_you_liked.append(BecauseYouLikedItem(
+                        liked_song_id=lid,
+                        liked_title=anchor_doc.get("title", "Track"),
+                        liked_artist=anchor_doc.get("artist", "Artist"),
+                        similar_songs=[Song(**s) for s in similar_raw]
+                    ))
 
-    # 5. Trending Tracks
-    trend_cursor = songs_coll.find({}).sort("popularity", -1).skip(4).limit(8)
-    trend_raw = await trend_cursor.to_list(length=8)
+    # 5. Trending Tracks, Mood Mixes, Artists, Albums, and Playlists (Concurrent fetch)
+    async def fetch_catalog_sections():
+        trend_cursor = songs_coll.find({}).sort("popularity", -1).skip(4).limit(8)
+        art_cursor = artists_coll.find({}).sort("popularity", -1).limit(6)
+        alb_cursor = albums_coll.find({}).limit(6)
+        p_cursor = playlists_coll.find({"user_id": user_id}).sort("updated_at", -1).limit(6)
+
+        trend_raw, art_raw, alb_raw, p_raw = await asyncio.gather(
+            trend_cursor.to_list(length=8),
+            art_cursor.to_list(length=6),
+            alb_cursor.to_list(length=6),
+            p_cursor.to_list(length=6)
+        )
+        return trend_raw, art_raw, alb_raw, p_raw
+
+    trend_raw, art_raw, alb_raw, p_raw = await fetch_catalog_sections()
+
     trending = [Song(**s) for s in trend_raw]
+    featured_artists = [Artist(**a) for a in art_raw]
+    featured_albums = [Album(**a) for a in alb_raw]
+    popular_albums = list(featured_albums)
 
     # 6. Mood Mixes
     mood_definitions = [
@@ -118,19 +174,6 @@ async def get_home_feed(current_user: dict = Depends(get_current_user)):
                 songs=[Song(**s) for s in m_raw]
             ))
 
-    # 7. Featured Artists
-    art_cursor = artists_coll.find({}).sort("popularity", -1).limit(6)
-    art_raw = await art_cursor.to_list(length=6)
-    featured_artists = [Artist(**a) for a in art_raw]
-
-    # 8. Featured Albums
-    alb_cursor = albums_coll.find({}).limit(6)
-    alb_raw = await alb_cursor.to_list(length=6)
-    featured_albums = [Album(**a) for a in alb_raw]
-
-    # 9. User Playlists
-    p_cursor = playlists_coll.find({"user_id": user_id}).sort("updated_at", -1).limit(6)
-    p_raw = await p_cursor.to_list(length=6)
     user_playlists = [
         Playlist(
             id=str(p["_id"]),
@@ -156,5 +199,6 @@ async def get_home_feed(current_user: dict = Depends(get_current_user)):
         mood_mixes=mood_mixes,
         featured_artists=featured_artists,
         featured_albums=featured_albums,
+        popular_albums=popular_albums,
         user_playlists=user_playlists
     )

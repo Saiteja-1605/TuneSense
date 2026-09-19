@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { PlayerProvider } from './context/PlayerContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './layouts/AppLayout';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { healthApi } from './api';
 
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
@@ -26,9 +28,15 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { ProfilePage } from './pages/ProfilePage';
 
 export function App() {
+  // Proactively warm up backend service if container was spun down
+  useEffect(() => {
+    healthApi.getHealth().catch(() => {});
+  }, []);
+
   return (
-    <AuthProvider>
-      <PlayerProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <PlayerProvider>
         <BrowserRouter>
           <Routes>
             {/* Public Routes */}
@@ -77,6 +85,7 @@ export function App() {
         </BrowserRouter>
       </PlayerProvider>
     </AuthProvider>
+  </ErrorBoundary>
   );
 }
 

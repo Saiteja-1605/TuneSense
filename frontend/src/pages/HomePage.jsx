@@ -69,19 +69,80 @@ export const HomePage = () => {
     );
   }
 
-  const {
-    greeting,
-    recently_played = [],
-    made_for_you = [],
-    because_you_liked = [],
-    mood_mixes = [],
-    trending = [],
-    featured_artists = [],
-    popular_albums = [],
-  } = homeData;
+  const greeting = homeData?.greeting || 'Welcome to TuneSense';
+  const recently_played = (Array.isArray(homeData?.recently_played) ? homeData.recently_played : []).filter(
+    (t) => t && t.song_id
+  );
 
-  // Quick picks from recently played or made for you
-  const quickPicks = (recently_played.length > 0 ? recently_played : made_for_you.map((m) => m.song)).slice(0, 6);
+  // Normalize made_for_you whether items are { song, score, reason } or raw Song objects
+  const raw_made_for_you = Array.isArray(homeData?.made_for_you) ? homeData.made_for_you : [];
+  const made_for_you = raw_made_for_you
+    .map((item) => {
+      if (!item) return null;
+      if (item.song && item.song.song_id) {
+        return {
+          song: item.song,
+          score: typeof item.score === 'number' ? item.score : 88,
+          reason: item.reason || 'Matches your personalized taste profile',
+        };
+      }
+      if (item.song_id) {
+        return {
+          song: item,
+          score: 88,
+          reason: `Recommended based on ${item.genre || 'your taste'}`,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+
+  // Safely derive quickPicks:
+  const madeForYouTracks = made_for_you.map((m) => m.song).filter(Boolean);
+  const quickPicks = (recently_played.length > 0 ? recently_played : madeForYouTracks).slice(0, 6);
+
+  // Safely normalize because_you_liked (handles list of BecauseYouLikedItem, single object, or empty)
+  const raw_byl = homeData?.because_you_liked;
+  const because_you_liked = (
+    Array.isArray(raw_byl)
+      ? raw_byl
+      : raw_byl && typeof raw_byl === 'object'
+      ? [raw_byl]
+      : []
+  )
+    .filter(Boolean)
+    .map((item) => {
+      const liked_id = item.liked_song_id || item.anchor_song?.song_id;
+      const title = item.liked_title || item.anchor_song?.title || 'Track';
+      const similar = Array.isArray(item.similar_songs)
+        ? item.similar_songs
+        : Array.isArray(item.recommendations)
+        ? item.recommendations
+        : [];
+      return {
+        liked_song_id: liked_id,
+        liked_title: title,
+        similar_songs: similar.filter((s) => s && s.song_id),
+      };
+    })
+    .filter((byl) => byl.liked_song_id && byl.similar_songs.length > 0);
+
+  const mood_mixes = (Array.isArray(homeData?.mood_mixes) ? homeData.mood_mixes : []).filter(
+    (m) => m && Array.isArray(m.songs) && m.songs.length > 0
+  );
+  const trending = (Array.isArray(homeData?.trending) ? homeData.trending : []).filter(
+    (t) => t && t.song_id
+  );
+  const featured_artists = (Array.isArray(homeData?.featured_artists) ? homeData.featured_artists : []).filter(
+    (a) => a && a.artist_id
+  );
+  const raw_albums =
+    Array.isArray(homeData?.popular_albums) && homeData.popular_albums.length > 0
+      ? homeData.popular_albums
+      : Array.isArray(homeData?.featured_albums)
+      ? homeData.featured_albums
+      : [];
+  const popular_albums = raw_albums.filter((a) => a && a.album_id);
 
   return (
     <div className="space-y-10 pb-16">
@@ -154,7 +215,7 @@ export const HomePage = () => {
             {made_for_you.map(({ song, score, reason }) => (
               <div
                 key={song.song_id}
-                onClick={() => playTrack(song, made_for_you.map((m) => m.song))}
+                onClick={() => playTrack(song, madeForYouTracks)}
                 className="group p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/5 transition-all cursor-pointer relative flex flex-col"
               >
                 <div className="relative aspect-square rounded-xl overflow-hidden mb-3 bg-purple-950/40">

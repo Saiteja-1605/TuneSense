@@ -3,6 +3,7 @@ import apiClient from './client';
 export const authApi = {
   register: (data) => apiClient.post('/api/auth/register', data).then(r => r.data),
   login: (data) => apiClient.post('/api/auth/login', data).then(r => r.data),
+  demo: () => apiClient.post('/api/auth/demo').then(r => r.data),
   getMe: () => apiClient.get('/api/auth/me').then(r => r.data),
 };
 

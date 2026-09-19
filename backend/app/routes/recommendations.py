@@ -65,18 +65,18 @@ async def get_recommendations(
         mood_filter=mood
     )
 
-    # 4. Save to recommendation_history (asynchronously record recommendations)
+    # 4. Save to recommendation_history in batch
     history_coll = db_manager.get_collection("recommendation_history")
     now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
     
     items = []
+    history_items = []
     for r in raw_recs:
         s_data = r["song"]
         song_id = s_data["song_id"]
         current_fb = feedback_map.get(song_id)
 
-        # Log history item
-        hist_item = {
+        history_items.append({
             "_id": str(uuid.uuid4()),
             "user_id": user_id,
             "song_id": song_id,
@@ -84,8 +84,7 @@ async def get_recommendations(
             "reason": r["reason"],
             "feedback": current_fb,
             "created_at": now_iso
-        }
-        await history_coll.insert_one(hist_item)
+        })
 
         items.append(RecommendationItemResponse(
             song=Song(**s_data),
@@ -94,6 +93,12 @@ async def get_recommendations(
             feedback=current_fb,
             similarity=r.get("similarity", 0.0)
         ))
+
+    if history_items:
+        try:
+            await history_coll.insert_many(history_items)
+        except Exception:
+            pass
 
     return RecommendationListResponse(
         items=items,

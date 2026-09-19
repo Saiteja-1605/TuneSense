@@ -54,7 +54,7 @@ export const DiscoverPage = () => {
 
   const handleFeedbackChange = (songId, newFeedback) => {
     setRecommendations((prev) =>
-      prev.map((r) => (r.song.song_id === songId ? { ...r, feedback: newFeedback } : r))
+      prev.map((r) => (r?.song?.song_id === songId ? { ...r, feedback: newFeedback } : r))
     );
   };
 
@@ -133,9 +133,9 @@ export const DiscoverPage = () => {
             Vectorizing catalogue and ranking acoustic similarity...
           </p>
         </div>
-      ) : recommendations.length > 0 ? (
+      ) : recommendations.filter((item) => item?.song?.song_id).length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {recommendations.map((item) => (
+          {recommendations.filter((item) => item?.song?.song_id).map((item) => (
             <SongCard
               key={item.song.song_id}
               song={item.song}

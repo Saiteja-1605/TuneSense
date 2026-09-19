@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from starlette.testclient import TestClient
 from app.main import app
 
@@ -264,4 +265,63 @@ def test_playlists_and_library_and_home(client):
     # 9. Clean up playlist
     del_pl = client.delete(f"/api/playlists/{playlist_id}", headers=headers)
     assert del_pl.status_code == 200
+
+def test_demo_login_and_endpoints(client):
+    # 1. Test standard login with demo credentials
+    res = client.post("/api/auth/login", json={
+        "email": "alex@tunesense.io",
+        "password": "DemoPass123!"
+    })
+    assert res.status_code == 200
+    data = res.json()
+    assert "access_token" in data
+    assert data["user"]["email"] == "alex@tunesense.io"
+    assert data["user"]["name"] == "Alex Rivera"
+
+    # 2. Test 1-click /api/auth/demo endpoint
+    demo_res = client.post("/api/auth/demo")
+    assert demo_res.status_code == 200
+    demo_data = demo_res.json()
+    assert "access_token" in demo_data
+    assert demo_data["user"]["email"] == "alex@tunesense.io"
+
+def test_brand_new_user_home_feed(client):
+    # Register a completely brand new user with 0 history and 0 likes
+    new_email = f"brandnew_{uuid.uuid4().hex[:6]}@example.com"
+    reg_res = client.post("/api/auth/register", json={
+        "name": "Fresh User",
+        "email": new_email,
+        "password": "Password123!"
+    })
+    assert reg_res.status_code == 201
+    token = reg_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Fetch home feed for this brand new user
+    home_res = client.get("/api/home", headers=headers)
+    assert home_res.status_code == 200
+    home_data = home_res.json()
+
+    # Verify contract requirements:
+    # 1. made_for_you must be a list of items with 'song', 'score', 'reason'
+    assert isinstance(home_data["made_for_you"], list)
+    assert len(home_data["made_for_you"]) > 0
+    first_item = home_data["made_for_you"][0]
+    assert "song" in first_item
+    assert "song_id" in first_item["song"]
+    assert "score" in first_item
+    assert "reason" in first_item
+
+    # 2. because_you_liked must be a list (empty for new user, never None/null)
+    assert isinstance(home_data["because_you_liked"], list)
+    assert home_data["because_you_liked"] == []
+
+    # 3. recently_played must be populated (with popular fallback)
+    assert isinstance(home_data["recently_played"], list)
+    assert len(home_data["recently_played"]) > 0
+
+    # 4. popular_albums and featured_albums must both be present
+    assert isinstance(home_data["popular_albums"], list)
+    assert isinstance(home_data["featured_albums"], list)
+    assert len(home_data["popular_albums"]) > 0
 
